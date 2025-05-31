@@ -81,6 +81,7 @@ export type { InvoiceType };
 
 export default function Home() {
   const [items, setItems] = useState<Item[]>([{ name: "", qnt: 0, rate: 0 }]);
+  const [mounted, setMounted] = useState(false)
   const [calcs, setCalcs] = useState({
     shipping: "0",
     subtotal: "0",
@@ -99,7 +100,7 @@ export default function Home() {
       items: items,
       shipping: 0,
       paid: 0,
-      tax: 7.5
+      tax: 7.5,
     },
   });
 
@@ -138,6 +139,10 @@ export default function Home() {
       balance: (items_total + new_shipping - watchedPaid).toFixed(2),
     });
   }, [watchedItems, watchedShipping, watchedPaid, watchedTax]);
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
@@ -377,15 +382,17 @@ export default function Home() {
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date: Date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
-                        initialFocus
-                      />
+                      {mounted && (
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date: Date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                          }
+                          initialFocus
+                        />
+                      )}
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
