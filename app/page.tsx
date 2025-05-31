@@ -81,7 +81,6 @@ export type { InvoiceType };
 
 export default function Home() {
   const [items, setItems] = useState<Item[]>([{ name: "", qnt: 0, rate: 0 }]);
-  const [mounted, setMounted] = useState(false);
   const [calcs, setCalcs] = useState({
     shipping: "0",
     subtotal: "0",
@@ -108,6 +107,7 @@ export default function Home() {
     handleSubmit,
     register,
     control,
+    setValue,
     formState: { isValid, errors, isValidating, isDirty },
     reset,
   } = form;
@@ -131,18 +131,36 @@ export default function Home() {
       0
     );
     const new_shipping = Number(watchedShipping);
+    const paid = Number(watchedPaid);
 
     setCalcs({
       shipping: (new_shipping / (1 + new_tax)).toFixed(2),
       subtotal: ((items_total + new_shipping) / (1 + new_tax)).toFixed(2),
       total: (items_total + new_shipping).toFixed(2),
-      balance: (items_total + new_shipping - watchedPaid).toFixed(2),
+      balance: (items_total + new_shipping - paid).toFixed(2),
     });
-  }, [watchedItems, watchedShipping, watchedPaid, watchedTax]);
+
+    if (!isNaN(items_total + new_shipping)) {
+      setValue("paid", items_total + new_shipping);
+    }
+  }, [JSON.stringify(watchedItems), watchedShipping, watchedTax]);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    const new_tax = Number(watchedTax / 100);
+    const items_total = watchedItems.reduce(
+      (a, i) => a + Number(i.qnt * i.rate),
+      0
+    );
+    const new_shipping = Number(watchedShipping);
+    const paid = Number(watchedPaid);
+
+    setCalcs({
+      shipping: (new_shipping / (1 + new_tax)).toFixed(2),
+      subtotal: ((items_total + new_shipping) / (1 + new_tax)).toFixed(2),
+      total: (items_total + new_shipping).toFixed(2),
+      balance: (items_total + new_shipping - paid).toFixed(2),
+    });
+  }, [watchedPaid]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
@@ -356,49 +374,47 @@ export default function Home() {
                 )}
               />
             </div>
-            {mounted && (
-              <FormField
-                control={form.control}
-                name="date"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Invoice Date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-[240px] pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date: Date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Invoice Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date: Date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             {loading == "false" ? (
               <div className="">
                 <p>{`Shipping: ${calcs.shipping}`}</p>
