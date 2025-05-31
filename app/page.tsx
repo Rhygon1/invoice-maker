@@ -209,6 +209,7 @@ export default function Home() {
                     <FormLabel>Phone number</FormLabel>
                     <FormControl>
                       <PhoneInput
+                        defaultCountry="US"
                         placeholder="Enter a phone number"
                         {...field}
                       />
