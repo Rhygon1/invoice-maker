@@ -99,8 +99,7 @@ export default function Home() {
       items: items,
       shipping: 0,
       paid: 0,
-      tax: 7.5,
-      date: new Date()
+      tax: 7.5
     },
   });
 

@@ -148,10 +148,8 @@ function makeHtml(data) {
       }
 
       .totals table {
-        width: 300px;
+        width: 30%;
         border-collapse: collapse;
-        position: absolute;
-        right: 0px;
       }
 
       .totals td {
@@ -183,30 +181,31 @@ function makeHtml(data) {
   <body>
     <div class="header flex justify-between">
       <div class="left">
-        <div style="line-height: 15pt;"><strong>Lis Boutique Llc</strong></div>
-        <div style="line-height: 15pt;">Saint Cloud</div>
-        <div style="line-height: 15pt;">Florida, 34771</div>
-        <div style="line-height: 15pt;">US</div>
-        <div style="line-height: 15pt;">lisboutique06@gmail.com</div>
+        <div style="line-height: 15pt;"><strong>LIS Boutique LLC.</strong></div>
+        <div style="line-height: 15pt;">Blue Vw Wy, Saint Cloud</div>
+        <div style="line-height: 15pt;">Florida, US 34771</div>
+        <div style="line-height: 15pt;"><strong>Ph # :</strong> +1 689-267-8636</div>
+        <div style="line-height: 15pt;"><strong>EMail ID :</strong> lisboutique06@gmail.com</div>
       </div>
       <div class="right" style="display: flex; flex-direction: column">
-        <div class="invoice-title">INVOICE</div>
-        <div style="margin-bottom: 40pt;"><strong>${data.id}</strong></div>
-        <div><strong>Balance Due</strong><br /><strong>$${data.balanceLeft}</strong></div>
+        <div style="margin-bottom: 40pt" class="invoice-title">INVOICE</div>
+        <div><strong>Balance Due : </strong><strong>$${data.balanceLeft}</strong></div>
 
         <div style="margin-top: 20px; font-size: 0.9em">
-          <div style="line-height: 30pt;">Invoice Date : ${formatDate(data.date)}</div>
-          <div style="line-height: 30pt;">Terms : Due in one month</div>
-          <div style="line-height: 30pt;">Due Date : ${formatDate(data.dueDate)}</div>
-          <div style="line-height: 30pt;">P.O.# : ${data.poNum}</div>
+          <div style="margin-bottom: 20pt;"><strong>Invoice # :</strong> ${data.id}</div>  
+          <div style="line-height: 30pt;"><strong>Invoice Date :</strong> ${formatDate(data.date)}</div>
+          <div style="line-height: 30pt;"><strong>Terms :</strong> Due in one month</div>
+          <div style="line-height: 30pt;"><strong>Due Date :</strong> ${formatDate(data.dueDate)}</div>
+   
         </div>
       </div>
     </div>
 
     <div class="invoice-details">
+      <div"><strong> Customer Name & Address: </strong></div>
       <div style="line-height: 30pt;"><strong>${data.name}</strong></div>
+      <div>${data.address}</div>
       <div>${data.phone}</div>
-      <div style="line-height: 50pt;">${data.address}</div>
     </div>
 
     <div class="table-container">
@@ -221,16 +220,15 @@ function makeHtml(data) {
           </tr>
         </thead>
         <tbody>`
-  console.log(data.items)
-  data.items.forEach(item => {
+   data.items.forEach(item => {
     firstHalf += `<tr>
-              <td>${item.number}</td>
+              <td style = "text-align:center">${item.number}</td>
               <td>
                 ${item.name}<br />
               </td>
-              <td>${item.qnt}</td>
-              <td>$${item.rate}</td>
-              <td>$${item.amount}</td>
+              <td style = "text-align:center">${item.qnt}</td>
+              <td style = "text-align:right">$${item.rate}</td>
+              <td style = "text-align:right">$${item.amount}</td>
             </tr>`
 
   })
@@ -239,35 +237,44 @@ function makeHtml(data) {
       </table>
     </div>
 
-    <div class="totals" style="height: full">
-      <table style="border-collapse: separate; border-spacing: 0;">
+    <div class="totals" style="height: full; display: flex; flex-direction: column; justify-content: space-between; margin: 5px;">
+      <table style="border-collapse: separate; border-spacing: 0; align-self: end;">
         <tr>
           <td>Shipping</td>
-          <td>$${data.shipping}</td>
+          <td style = "text-align:right">$${data.shipping}</td>
         </tr>
         <tr>
           <td>Sub Total</td>
-          <td>$${data.subtotal}</td>
+          <td style = "text-align:right">$${data.subtotal}</td>
         </tr>
         <tr>
           <td>Sales (${data.TaxPercent})</td>
-          <td>$${data.TaxAmount}</td>
+          <td style = "text-align:right">$${data.TaxAmount}</td>
         </tr>
         <tr class="bold">
           <td>Total</td>
-          <td>$${data.total}</td>
+          <td style = "text-align:right">$${data.total}</td>
         </tr>
         <tr class="red">
           <td>Payment Made</td>
-          <td>(-) $${data.paymentMade}</td>
+          <td style = "text-align:right">(-) $${data.paymentMade}</td>
         </tr>
         <tr class="bold" style="background: #e6e5e5;">
           <td>Balance Due</td>
-          <td>$${data.balanceLeft}</td>
+          <td style = "text-align:right">$${data.balanceLeft}</td>
         </tr>
+        
       </table>
-      
     </div>
+
+    
+      <div style="position: absolute; bottom: 5%;">
+      <p>Thank you for shopping with us!</p>
+      <br></br>
+      <p style="font-size:small"><strong>Disclaimer</strong></p>
+      <p style="line-height: 12pt; font-size: small;">* All sales are final.</p>
+      <p style="line-height: 12pt; font-size: small;">** This is a computer generated invoice and does not require a physical signature.  </p>
+      </div>
 
   </body>
 </html>`
