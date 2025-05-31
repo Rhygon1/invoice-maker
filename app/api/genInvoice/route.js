@@ -160,8 +160,8 @@ function makeHtml(data) {
       <div class="left">
         <div style="line-height: 15pt;"><strong>Lis Boutique Llc</strong></div>
         <div style="line-height: 15pt;">Saint Cloud</div>
-        <div style="line-height: 15pt;">Florida Florida 34771</div>
-        <div style="line-height: 15pt;">U.S.A</div>
+        <div style="line-height: 15pt;">Florida, 34771</div>
+        <div style="line-height: 15pt;">US</div>
         <div style="line-height: 15pt;">lisboutique06@gmail.com</div>
       </div>
       <div class="right" style="display: flex; flex-direction: column">
