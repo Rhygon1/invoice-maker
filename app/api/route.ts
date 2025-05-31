@@ -47,7 +47,11 @@ export async function POST(req: NextRequest) {
   let json = await req.json();
   console.log(json);
   
-  let poNum = await Invoice.countDocuments({});
+  let lastDoc = await Invoice.find().sort({ _id: -1 }).limit(1).exec();
+  let poNum = 0;
+  if (lastDoc.length > 0){
+    poNum = lastDoc[0].poNum + 1;
+  }
   let id = "INV-" + String(poNum).padStart(5, "0");
   const items_total = json.items?.reduce(
     (a: number, i: ItemType) => a + Number(i.qnt * i.rate),
