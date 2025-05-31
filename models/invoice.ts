@@ -7,8 +7,8 @@ const InvoiceSchema = new mongoose.Schema({
   address: String,
   id: { type: String, required: true },
   poNum: { type: Number, required: true },
-  date: { type: String, required: true },
-  dueDate: { type: String, required: true },
+  date: { type: Date, required: true },
+  dueDate: { type: Date, required: true },
   items: [
     {
       number: { type: Number, required: true },

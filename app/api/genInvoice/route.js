@@ -29,6 +29,31 @@
 //   }
 // }
 
+function formatDate(date){
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const today = new Date(date);
+  const yyyy = today.getFullYear();
+  let mm = months[today.getMonth()];
+  let dd = today.getDate();
+
+  const formattedToday = dd + " " + mm + " " + yyyy;
+
+  return formattedToday;
+}
+
 const chromium = require("@sparticuz/chromium-min");
 const puppeteer = require("puppeteer-core");
 
@@ -170,9 +195,9 @@ function makeHtml(data) {
         <div><strong>Balance Due</strong><br /><strong>$${data.balanceLeft}</strong></div>
 
         <div style="margin-top: 20px; font-size: 0.9em">
-          <div style="line-height: 30pt;">Invoice Date : ${data.date}</div>
+          <div style="line-height: 30pt;">Invoice Date : ${formatDate(data.date)}</div>
           <div style="line-height: 30pt;">Terms : Due in one month</div>
-          <div style="line-height: 30pt;">Due Date : ${data.dueDate}</div>
+          <div style="line-height: 30pt;">Due Date : ${formatDate(data.dueDate)}</div>
           <div style="line-height: 30pt;">P.O.# : ${data.poNum}</div>
         </div>
       </div>

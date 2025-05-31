@@ -28,6 +28,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Trash } from "lucide-react";
 import { Loader, Check } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -59,6 +68,9 @@ const formSchema = z.object({
   shipping: z.coerce.number().min(0),
   paid: z.coerce.number().min(0),
   tax: z.coerce.number().min(0),
+  date: z.date({
+    required_error: "An Invoice date required.",
+  }),
 });
 
 type Item = z.infer<typeof formSchema>["items"][number];
@@ -88,6 +100,7 @@ export default function Home() {
       shipping: 0,
       paid: 0,
       tax: 7.5,
+      date: new Date()
     },
   });
 
@@ -132,7 +145,7 @@ export default function Home() {
     // ✅ This will be type-safe and validated.
     setItems(values.items);
     console.log(values);
-    let id = ""
+    let id = "";
 
     setLoading("db");
     fetch("/api", {
@@ -338,6 +351,47 @@ export default function Home() {
                 )}
               />
             </div>
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Invoice Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             {loading == "false" ? (
               <div className="">
                 <p>{`Shipping: ${calcs.shipping}`}</p>

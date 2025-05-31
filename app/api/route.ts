@@ -8,8 +8,8 @@ type InvType = {
   address: String;
   id: String;
   poNum: Number;
-  date: String;
-  dueDate: String;
+  date: Date;
+  dueDate: Date;
   items: [
     {
       number: Number;
@@ -36,39 +36,17 @@ type ItemType = {
   amount: number;
 };
 
-function getDate(monthOffset: number) {
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  let mm = months[today.getMonth() + monthOffset]; // Months start at 0!
-  let dd = today.getDate();
-
-  let str_dd = String(dd);
-  if (dd < 10) str_dd = "0" + String(dd);
-
-  const formattedToday = str_dd + " " + mm + " " + yyyy;
-
-  return formattedToday;
+function addMonth(date: Date) {
+  const newDate = new Date(date);
+  newDate.setMonth(newDate.getMonth()+1)
+  return newDate
 }
 
 export async function POST(req: NextRequest) {
   await connectDB();
   let json = await req.json();
   console.log(json);
-
+  
   let poNum = await Invoice.countDocuments({});
   let id = "INV-" + String(poNum).padStart(5, "0");
   const items_total = json.items?.reduce(
@@ -83,8 +61,8 @@ export async function POST(req: NextRequest) {
     address: json.address,
     poNum: poNum,
     id: id,
-    date: getDate(0),
-    dueDate: getDate(1),
+    date: json.date,
+    dueDate: addMonth(json.date),
     items: json.items?.map((a: ItemType, i: number) => {
       return {
         number: i + Number(1),
