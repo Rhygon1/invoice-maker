@@ -54,10 +54,10 @@ const formSchema = z.object({
         name: z.string().min(2, {
           message: "Item name must be at least 2 letters",
         }),
-        qnt: z.number().min(0, {
+        qnt: z.coerce.number().min(1, {
           message: "Must have at least one of the items",
         }),
-        rate: z.number().min(1, {
+        rate: z.coerce.number().min(1, {
           message: "Item must be at least $1",
         }),
       })
@@ -321,6 +321,7 @@ export default function Home() {
                               valueAsNumber: true,
                             })}
                             type="number"
+                            step="0.01"
                           />
                         </FormControl>
                         <FormMessage />

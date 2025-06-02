@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/invoices
 /.pnp
 .pnp.*
 .yarn/*
